@@ -1,0 +1,23 @@
+package com.example.bak.gmmavo;
+
+/**
+ * Created by Bak on 2015-02-23.
+ */
+public class MonitoringStation {
+    String Passport;
+    String Organization;
+    String Address;
+    String City;
+    String Voivodeship;
+    String Latitude;
+    String Longitude;
+    String IsVirtual;
+    String IsEnabled;
+    String IsActive;
+    String RadiationStatus;
+    String EnvironmentalStandard;
+    String LastDoseRateValue;
+    String LastDoseRateDateTime;
+
+
+}
