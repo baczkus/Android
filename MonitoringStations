@@ -1,0 +1,9 @@
+package com.example.bak.gmmavo;
+
+/**
+ * Created by Bak on 2015-02-23.
+ */
+public class MonitoringStations {
+    String MonitoringStation;
+    MonitoringStation Dane;
+}
