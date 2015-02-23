@@ -1,0 +1,66 @@
+package com.example.bak.gmmavo;
+
+import android.content.Context;
+import android.os.AsyncTask;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpHost;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.util.EntityUtils;
+
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+
+/**
+ * Created by Bak on 2015-02-23.
+ */
+public class Download extends AsyncTask<Void, Void, Void>{
+
+    private final Context context;
+
+    public Download(Context context) {
+        this.context = context;
+    }
+
+    private String GetData(String adres, int port){
+        String x = null;
+        HttpHost server = new HttpHost(adres, port);
+        HttpClient client = new DefaultHttpClient();
+        HttpGet get = new HttpGet();
+        HttpEntity wynik = null;
+        try {
+            HttpResponse odpowiedz = client.execute(server, get);
+            wynik = odpowiedz.getEntity();
+            x = EntityUtils.toString(wynik);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        return x;
+    }
+
+    private Void SaveData (String fileName, String dataString){
+        try {
+            FileOutputStream fos = context.openFileOutput(fileName, Context.MODE_PRIVATE);
+            fos.write(dataString.getBytes());
+            fos.close();
+        } catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
+
+        return null;
+    }
+@Override
+protected Void doInBackground(Void... params){
+    String adres = "http://gammavo.ath.eu/Services/Api/GetMonitoringStationsList/";
+    String dane = null;
+
+
+    return null;
+}
+
+}
