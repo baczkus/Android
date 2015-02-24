@@ -1,0 +1,82 @@
+package com.example.bak.gmmavo;
+
+import android.content.Context;
+import android.os.AsyncTask;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpHost;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.util.EntityUtils;
+
+import java.io.FileOutputStream;
+import java.util.ArrayList;
+import java.util.List;
+
+
+public class DownloadStationDetails extends AsyncTask<Void, Void, Void> {
+
+    private final List<MonitoringStations> StationList;
+    public static final String ADRES = "http://gammavo.ath.eu/Services/Api/GetMonitoringStationDetails/" ;
+    private final Context context;
+    private final IObserver observer;
+    private List<MonitoringStation> detailList;
+
+    public DownloadStationDetails(List<MonitoringStations> StationList, Context context, IObserver observer){
+        this.StationList = StationList;
+        this.context = context;
+        this.observer = observer;
+        detailList = new ArrayList<>();
+    }
+
+    private void saveData (String fileName, String dataString){
+        try {
+            FileOutputStream fos = context.openFileOutput(fileName, Context.MODE_PRIVATE);
+            fos.write(dataString.getBytes());
+            fos.close();
+        } catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    private String GetData(String adres, int port){
+        String x = null;
+        HttpHost server = new HttpHost(adres, port);
+        HttpClient client = new DefaultHttpClient();
+        HttpGet get = new HttpGet();
+        HttpEntity wynik = null;
+        try {
+            HttpResponse odpowiedz = client.execute(server, get);
+            wynik = odpowiedz.getEntity();
+            x = EntityUtils.toString(wynik);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        return x;
+    }
+
+    public List<MonitoringStation> getAllDetails(){
+        return detailList;
+    }
+
+    @Override
+    protected Void doInBackground(Void... params) {
+        for (MonitoringStations station: StationList){
+            String data = GetData(ADRES+station.MonitoringStation+"/", 80);
+            saveData(station.MonitoringStation+".xml", data);
+        }
+
+        return null;
+    }
+
+    @Override
+    protected void onPostExecute(Void aVoid) {
+        super.onPostExecute(aVoid);
+        //drugi parser na obiekty
+        //z drugiego parsera wrzucac obiekty z Monstat do listy detailList
+        //observer.onChange();
+    }
+}
