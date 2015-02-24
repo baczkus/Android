@@ -1,0 +1,88 @@
+package com.example.bak.gmmavo;
+
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+
+public class ParseStationDetails {
+
+    public List<MonitoringStation> ParseStationsDetails(String FileName) throws
+            Exception{
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+
+        DocumentBuilder builder = factory.newDocumentBuilder();
+        Document document = builder.parse(ClassLoader.getSystemResourceAsStream(FileName));
+
+        List<MonitoringStation> StationDetails = new ArrayList<>();
+
+        NodeList nodeList = document.getDocumentElement().getChildNodes();
+
+        MonitoringStation mon = new MonitoringStation();
+
+        for (int i=0; i< nodeList.getLength(); i++){
+
+            Node node = nodeList.item(i);
+            if (node instanceof Element) { //to moze nie dzialac
+
+                String content = node.getLastChild().getTextContent().trim();
+                switch (node.getNodeName()) {
+                    case "Passport":
+                        mon.Passport = content;
+                        break;
+                    case "Organization":
+                        mon.Organization = content;
+                        break;
+                    case "Address":
+                        mon.Address = content;
+                        break;
+                    case "City":
+                        mon.City = content;
+                        break;
+                    case "Voivodeship":
+                        mon.Voivodeship = content;
+                        break;
+                    case "Latitude":
+                        mon.Latitude = content;
+                        break;
+                    case "Longitude":
+                        mon.Longitude = content;
+                        break;
+                    case "IsVirtual":
+                        mon.IsVirtual = content;
+                        break;
+                    case "IsEnabled":
+                        mon.IsEnabled = content;
+                        break;
+                    case "IsActive":
+                        mon.IsActive = content;
+                        break;
+                    case "RadiationStatus":
+                        mon.RadiationStatus = content;
+                        break;
+                    case "EnvironmentalStandard":
+                        mon.EnvironmentalStandard = content;
+                        break;
+                    case "LastDoseRateValue":
+                        mon.LastDoseRateValue = content;
+                        break;
+                    case "LastDoseRateDateTime":
+                        mon.LastDoseRateDateTime = content;
+                        break;
+                }
+                
+            }
+
+        }
+        StationDetails.add(mon);
+        return StationDetails;
+    }
+
+}
