@@ -24,6 +24,7 @@ public class DownloadStationDetails extends AsyncTask<Void, Void, Void> {
     private final IObserver observer;
     private List<MonitoringStation> detailList;
 
+    //konstruktor
     public DownloadStationDetails(List<MonitoringStations> StationList, Context context, IObserver observer){
         this.StationList = StationList;
         this.context = context;
@@ -31,6 +32,7 @@ public class DownloadStationDetails extends AsyncTask<Void, Void, Void> {
         detailList = new ArrayList<>();
     }
 
+        //zapisywanie danych ze stacji
     private void saveData (String fileName, String dataString){
         try {
             FileOutputStream fos = context.openFileOutput(fileName, Context.MODE_PRIVATE);
@@ -42,6 +44,7 @@ public class DownloadStationDetails extends AsyncTask<Void, Void, Void> {
         }
     }
 
+        //sciaganie danych ze stacji
     private String GetData(String adres, int port){
         String x = null;
         HttpHost server = new HttpHost(adres, port);
@@ -75,8 +78,18 @@ public class DownloadStationDetails extends AsyncTask<Void, Void, Void> {
     @Override
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
+        for (MonitoringStations station: StationList){
+            ParseStationDetails par = new ParseStationDetails();
+            String fileName = station.MonitoringStation+".xml";
+            try {
+                detailList.add(par.ParseStationsDetailsMethod(fileName));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
         //drugi parser na obiekty
         //z drugiego parsera wrzucac obiekty z Monstat do listy detailList
-        //observer.onChange();
+        observer.onChange(detailList);
     }
 }
