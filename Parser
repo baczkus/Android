@@ -35,8 +35,11 @@ public class Parser {
                     Node node = nodeList.item(i);
                     if (node instanceof Element) { //to moze nie dzialac
                         MonitoringStations mon = new MonitoringStations();
-                        mon.MonitoringStation = node.getAttributes().
-                                getNamedItem("MonitoringStation").getNodeValue();
+//                        mon.MonitoringStation = node.getAttributes().
+//                                getNamedItem("MonitoringStation").getNodeValue();
+
+                        String content = node.getLastChild().getTextContent().trim();
+                        mon.MonitoringStation = content;  //mozliwe ze ma byc tak
                         StationsList.add(mon);
                     }
 
