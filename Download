@@ -11,18 +11,21 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
 
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 
-/**
- * Created by Bak on 2015-02-23.
- */
+import java.io.FileOutputStream;
+import java.util.ArrayList;
+import java.util.List;
+
+
 public class Download extends AsyncTask<Void, Void, Void>{
 
     private final Context context;
+    private final IObserver observer;
+    private DownloadStationDetails downloadStationDetailsAsyncTask;
 
-    public Download(Context context) {
+    public Download(Context context, IObserver observer) {
         this.context = context;
+        this.observer = observer;
     }
 
     private String GetData(String adres, int port){
@@ -54,13 +57,33 @@ public class Download extends AsyncTask<Void, Void, Void>{
 
         return null;
     }
+
+    public DownloadStationDetails getDownloadStationDetailsAsyncTask (){
+        return downloadStationDetailsAsyncTask;
+    }
+
 @Override
-protected Void doInBackground(Void... params){
+protected Void  doInBackground(Void... params){
     String adres = "http://gammavo.ath.eu/Services/Api/GetMonitoringStationsList/";
-    String dane = null;
-
-
+    String dane = GetData(adres, 80);
+    SaveData("Monit.xml", dane);
     return null;
 }
 
+    @Override
+    protected void onPostExecute(Void aVoid) {
+        super.onPostExecute(aVoid);
+        List<MonitoringStations> StationList = new ArrayList<>();
+        Parser p = new Parser();
+        try {
+            StationList=p.ParseStationsList("Monit.xml");
+            downloadStationDetailsAsyncTask = new DownloadStationDetails(StationList, context, observer);
+            downloadStationDetailsAsyncTask.execute();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+
+    }
 }
