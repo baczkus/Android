@@ -1,0 +1,11 @@
+package com.example.bak.gmmavo;
+
+import java.util.List;
+
+public interface IObserver {
+
+    public void onChange(List<MonitoringStation> list);
+
+
+
+}
